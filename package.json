@@ -1,0 +1,38 @@
+{
+  "name": "let-us-talk",
+  "version": "1.0.0",
+  "description": "build complete chat app api",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon --exec node_modules/.bin/babel-node app.js"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Muhammed255/complete-chat-app.git"
+  },
+  "author": "Mohamed",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Muhammed255/complete-chat-app/issues"
+  },
+  "homepage": "https://github.com/Muhammed255/complete-chat-app#readme",
+  "dependencies": {
+    "@withvoid/make-validation": "^1.0.5",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.3",
+    "morgan": "^1.10.0",
+    "socket.io": "^4.1.3",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.14.8",
+    "@babel/node": "^7.14.7",
+    "@babel/preset-env": "^7.14.8",
+    "nodemon": "^2.0.12"
+  }
+}
