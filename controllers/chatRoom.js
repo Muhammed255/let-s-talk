@@ -4,6 +4,7 @@ import makeValidation from '@withvoid/make-validation';
 import ChatRoomModel, { CHAT_ROOM_TYPES } from '../models/ChatRoom.js';
 import ChatMessageModel from '../models/ChatMessage.js';
 import UserModel from '../models/User.js';
+import socketIo from '../utils/socket-io.js';
 
 export default {
   initiate: async (req, res) => {
@@ -26,6 +27,7 @@ export default {
       const chatRoom = await ChatRoomModel.initiateChat(allUserIds, type, chatInitiator);
       return res.status(200).json({ success: true, chatRoom });
     } catch (error) {
+      console.log(error)
       return res.status(500).json({ success: false, error: error })
     }
   },
@@ -45,9 +47,11 @@ export default {
       };
       const currentLoggedUser = req.userId;
       const post = await ChatMessageModel.createPostInChatRoom(roomId, messagePayload, currentLoggedUser);
-      global.io.sockets.in(roomId).emit('new message', { message: post });
+      socketIo.getIO().emit('new message', { message: post });
+      // global.io.sockets.in(roomId).emit('new message', { message: post });
       return res.status(200).json({ success: true, post });
     } catch (error) {
+      console.log(error)
       return res.status(500).json({ success: false, error: error })
     }
   },
@@ -65,6 +69,7 @@ export default {
       );
       return res.status(200).json({ success: true, conversation: recentConversation });
     } catch (error) {
+      console.log(error)
       return res.status(500).json({ success: false, error: error })
     }
   },
@@ -75,6 +80,7 @@ export default {
       const chats = await ChatMessageModel.find({chatRoomId: roomId});
       return res.status(200).json({success: true, chats});
     }catch(err) {
+      console.log(error)
       return res.status(500).json({success: false, msg: err.message});
     }
   },
@@ -101,6 +107,7 @@ export default {
         users,
       });
     } catch (error) {
+      console.log(error)
       return res.status(500).json({ success: false, error });
     }
   },

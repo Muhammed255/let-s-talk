@@ -2,11 +2,11 @@ import http from "http";
 import express from "express";
 import logger from "morgan";
 import cors from "cors";
-import { Server } from "socket.io";
+// import { Server } from "socket.io";
 // mongo connection
 import "./config/mongo.js";
 // socket configuration
-import WebSockets from "./utils/WebSockets.js";
+// import WebSockets from "./utils/WebSockets.js";
 // routes
 import indexRouter from "./routes/index.js";
 import userRouter from "./routes/user.js";
@@ -14,6 +14,7 @@ import chatRoomRouter from "./routes/chatRoom.js";
 import deleteRouter from "./routes/delete.js";
 // middlewares
 import { decode } from "./middlewares/jwt.js";
+import socketIo from "./utils/socket-io.js";
 
 const app = express();
 
@@ -27,10 +28,21 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(cors([{origin: 'http://localhost:4200'}]))
 
+
+// app.use(function (req, res, next) {
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   res.setHeader("Access-Control-Allow-Credentials", "true");
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization');
+//   res.setHeader('Access-Control-Allow-Credentials', true);
+
+//   next();
+// });
+
 app.use("/", indexRouter);
 app.use("/users", userRouter);
 app.use("/room", decode, chatRoomRouter);
-app.use("/delete", deleteRouter);
+app.use("/delete", decode, deleteRouter);
 
 /** catch 404 and forward to error handler */
 app.use("*", (req, res) => {
@@ -41,15 +53,30 @@ app.use("*", (req, res) => {
 });
 
 /** Create HTTP server. */
-const server = http.createServer(app);
-const socket = new Server(server)
+//const server = http.createServer(app);
+const server = app.listen(port)
+
+const io = socketIo.init(server);
+io.on("connection", (socket) => {
+  console.log(socket.id);
+  console.log("Client connected!");
+})
+
+// const socket = new Server(server
+//   , {cors: {
+//   origin: 'http://localhost:4200',
+//   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
+//   allowedHeaders: ['content-type']
+// }}
+// )
+
 /** Create socket connection */
-global.io = socket.listen(server);
-global.io.on("connection", WebSockets.connection);
+// global.io = socket.listen(server);
+// global.io.on("connection", WebSockets.connection);
 /** Listen on provided port, on all network interfaces. */
 /** Event listener for HTTP server "listening" event. */
-server.listen(port)
-server.on("listening", () => {
-  console.log(`Listening on port:: http://localhost:${port}/`);
-});
+//server.listen(port)
+//server.on("listening", () => {
+  //console.log(`Listening on port:: http://localhost:${port}/`);
+//});
 

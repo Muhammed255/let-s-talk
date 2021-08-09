@@ -6,9 +6,11 @@ import UserModel, { USER_TYPES } from "../models/User.js";
 export default {
   onGetAllUsers: async (req, res) => {
     try {
-      const users = await UserModel.getUsers();
+      const users = await UserModel.find({ _id: { $ne: req.userId } });
+      // const users = await UserModel.getUsers();
       return res.status(200).json({ success: true, users });
     } catch (error) {
+      console.log(error);
       return res.status(500).json({ success: false, error: error });
     }
   },

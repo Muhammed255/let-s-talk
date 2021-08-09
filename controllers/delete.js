@@ -20,7 +20,7 @@ export default {
   deleteMessageById: async (req, res) => {
     try {
       const { messageId } = req.params;
-      const message = await ChatMessageModel.remove({ _id: messageId });
+      const message = await ChatMessageModel.remove({ _id: messageId, postedByUser: req.userId });
       return res.status(200).json({ 
         success: true, 
         deletedMessagesCount: message.deletedCount,
