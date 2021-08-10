@@ -101,6 +101,9 @@ export default {
         limit: parseInt(req.query.limit) || 10,
       };
       const conversation = await ChatMessageModel.getConversationByRoomId(roomId, options);
+      // console.log(conversation)
+      // console.log(JSON.stringify(conversation[0].readByRecipients))
+      // const populatedCoversation = ChatMessageModel.populate("conversation.$.readByRecipients.readByUserId")
       return res.status(200).json({
         success: true,
         conversation,
