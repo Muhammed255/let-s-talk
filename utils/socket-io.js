@@ -6,7 +6,7 @@ export default {
   init: (httpServer) => {
     io = new Server(httpServer, {
       cors: {
-        origin: "https://we-call-text-backend.herokuapp.com",
+        origin: "*",
         methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
         allowedHeaders: ["content-type"],
       },
